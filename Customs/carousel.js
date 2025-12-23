@@ -1,11 +1,17 @@
-// MUSIC (auto-start)
-const song = document.getElementById('birthday-song');
-window.addEventListener('load', async () => {
-    try { await song.play(); } 
-    catch (e) { console.log("Music blocked ❌", e); }
-});
+// Balloons generator (overlapping carousel)
+const balloonContainer = document.getElementById('balloons');
+for (let i = 0; i < 50; i++) {  // Increased number of balloons
+  const balloon = document.createElement('div');
+  balloon.classList.add('balloon');
+  balloon.style.left = Math.random() * 100 + '%';
+  balloon.style.animationDuration = 4 + Math.random() * 2 + 's';  // Faster balloon rise
+  balloon.style.width = 30 + Math.random() * 20 + 'px';
+  balloon.style.height = 50 + Math.random() * 20 + 'px';
+  balloonContainer.appendChild(balloon);
+}
 
-// CAROUSEL SWIPE
+
+// Carousel swipe functionality
 const track = document.querySelector('.carousel-track');
 const slides = Array.from(track.children);
 let currentIndex = 0, startX = 0, currentTranslate = 0, prevTranslate = 0, isDragging = false;
@@ -19,25 +25,39 @@ track.addEventListener('mousemove', touchMove);
 track.addEventListener('mouseup', touchEnd);
 track.addEventListener('mouseleave', () => { if (isDragging) touchEnd(); });
 
-function touchStart(event){ startX=getX(event); isDragging=true; track.style.transition='none'; }
-function touchMove(event){ if(!isDragging) return; const currentX=getX(event); const deltaX=currentX-startX; track.style.transform=`translateX(${prevTranslate+deltaX}px)`; }
-function touchEnd(){ isDragging=false; const slideWidth=slides[0].getBoundingClientRect().width; const movedBy=prevTranslate-parseInt(track.style.transform.replace('translateX(','').replace('px)',''))||0; if(movedBy>slideWidth/4 && currentIndex<slides.length-1) currentIndex++; if(movedBy<-slideWidth/4 && currentIndex>0) currentIndex--; setPositionByIndex(); }
-function getX(event){ return event.type.includes('mouse') ? event.clientX : event.touches[0].clientX; }
-function setPositionByIndex(){ const slideWidth=slides[0].getBoundingClientRect().width; currentTranslate=-currentIndex*slideWidth; prevTranslate=currentTranslate; track.style.transition='transform 0.3s ease-in-out'; track.style.transform=`translateX(${currentTranslate}px)`; }
+function touchStart(event) {
+  startX = getX(event);
+  isDragging = true;
+  track.style.transition = 'none';
+}
+
+function touchMove(event) {
+  if (!isDragging) return;
+  const currentX = getX(event);
+  const deltaX = currentX - startX;
+  track.style.transform = `translateX(${prevTranslate + deltaX}px)`;
+}
+
+function touchEnd() {
+  isDragging = false;
+  const slideWidth = slides[0].getBoundingClientRect().width;
+  const movedBy = prevTranslate - parseInt(track.style.transform.replace('translateX(', '').replace('px)', '')) || 0;
+  if (movedBy > slideWidth / 4 && currentIndex < slides.length - 1) currentIndex++;
+  if (movedBy < -slideWidth / 4 && currentIndex > 0) currentIndex--;
+  setPositionByIndex();
+}
+
+function getX(event) {
+  return event.type.includes('mouse') ? event.clientX : event.touches[0].clientX;
+}
+
+function setPositionByIndex() {
+  const slideWidth = slides[0].getBoundingClientRect().width;
+  currentTranslate = -currentIndex * slideWidth;
+  prevTranslate = currentTranslate;
+  track.style.transition = 'transform 0.3s ease-in-out';
+  track.style.transform = `translateX(${currentTranslate}px)`;
+}
+
 window.addEventListener('resize', setPositionByIndex);
 
-// -------------------------
-// BALLOONS GENERATOR (overlapping carousel)
-// -------------------------
-const balloonContainer = document.getElementById('balloons');
-for(let i=0;i<20;i++){
-  const balloon=document.createElement('div');
-  balloon.classList.add('balloon');
-  balloon.style.left=Math.random()*100+'%';
-  balloon.style.animationDuration=4+Math.random()*4+'s';
-  balloon.style.width=30+Math.random()*20+'px';
-  balloon.style.height=50+Math.random()*20+'px';
-  
-
-  balloonContainer.appendChild(balloon);
-}

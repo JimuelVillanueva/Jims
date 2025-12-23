@@ -1,17 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
-
     // MUSIC
     const audio = new Audio("hbd.mp3");
     audio.loop = true;
+    let audioPlayed = false;
 
     const startScreen = document.getElementById("startScreen");
     const startBtn = document.getElementById("startBtn");
 
     startBtn.addEventListener("click", async function () {
-
         // 1. PLAY MUSIC
         try {
             await audio.play();
+            audioPlayed = true; // Indicate that music has started playing
             console.log("Music playing ✔️");
         } catch (e) {
             console.log("Music blocked ❌", e);
@@ -25,11 +25,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function initCake() {
-
         const cake = document.querySelector(".cake");
         const candleCountDisplay = document.getElementById("candleCount");
 
-        const MAX_CANDLES = 3;  // limit to 3
+        const MAX_CANDLES =5;  // limit to 3
         let candles = [];
         let audioContext;
         let analyser;
@@ -57,6 +56,11 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.appendChild(proceedBtn);
 
         proceedBtn.addEventListener("click", () => {
+            // Save audio state before redirect
+            if (audioPlayed) {
+                localStorage.setItem("audioPlaying", "true");
+            }
+
             window.location.href = "carousel.html";
         });
 
