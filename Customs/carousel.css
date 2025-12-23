@@ -1,53 +1,267 @@
+/* Body with animated gradient background */
 body {
-  background-color: #ffe5ec;
-  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0;
+  font-family: 'Arial', sans-serif;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  overflow-x: hidden;
+
+  background: linear-gradient(135deg, #ffd6e0, #ffe5ec, #fff0f5, #ffe5ec);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  perspective: 1000px; /* 3D effect */
 }
 
+/* Floating subtle sparkles */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 10%, transparent 10%) repeat;
+  background-size: 50px 50px;
+  animation: floatCircles 20s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Gradient animation */
+@keyframes gradientShift {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+@keyframes floatCircles {
+  0% {transform: translateY(0);}
+  50% {transform: translateY(-50px);}
+  100% {transform: translateY(0);}
+}
+
+#balloons {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 10; /* make it on top of everything */
+}
+
+
+/* Individual balloons */
+.balloon {
+  position: absolute;
+  bottom: -100px;
+  width: 40px;
+  height: 60px;
+  border-radius: 50% 50% 50% 50%;
+  background: linear-gradient(145deg, #ff4d6d, #ff7aa0);
+  animation: rise 6s linear infinite; /* faster and looping */
+  transform-style: preserve-3d;
+  box-shadow: inset -5px -5px 10px rgba(255,255,255,0.3),
+              inset 5px 5px 10px rgba(0,0,0,0.2);
+}
+
+/* Balloon string */
+.balloon::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  width: 2px;
+  height: 40px;
+  background: #ff4d6d;
+  transform: translateX(-50%);
+}
+
+/* Balloon rise animation with 3D rotation */
+@keyframes rise {
+  0% {
+    transform: translateY(0) rotateX(0deg) rotateY(0deg);
+    opacity: 0;
+  }
+  50% { opacity: 1; }
+  100% {
+    transform: translateY(-120vh) rotateX(20deg) rotateY(20deg);
+    opacity: 0;
+  }
+}
+
+/* Carousel container */
 .carousel-container {
   text-align: center;
   padding: 50px 20px 20px 20px;
   flex: 1;
+  position: relative;
+  z-index: 1; /* carousel in the middle layer */
 }
 
+/* Carousel title */
 .carousel-title {
-  font-size: 32px;
+  font-size: 36px;
   color: #ff4d6d;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
 }
 
+/* Carousel box */
 .carousel {
   position: relative;
-  max-width: 600px;
+  max-width: 650px;
   margin: 0 auto;
   overflow: hidden;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  background-color: #fff0f5;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  background-color: rgba(255, 240, 245, 0.3);
   touch-action: pan-y;
+  border: 2px solid #ff9ab3;
+  z-index: 1; /* middle layer */
 }
 
+/* Track for sliding */
 .carousel-track {
   display: flex;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.4s ease-in-out;
   cursor: grab;
 }
 
-.carousel-image {
+/* Each slide */
+.slide {
+  position: relative;
   min-width: 100%;
-  height: 400px;
-  object-fit: cover;
-  user-select: none;
 }
 
+/* Carousel images */
+.carousel-image {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  user-select: none;
+  filter: brightness(0.85); /* helps text stand out */
+  transition: transform 0.5s ease;
+}
+
+.carousel-image:hover {
+  transform: scale(1.05);
+}
+
+/* Text overlay directly on image */
+.slide-text {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  color: #fff;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+  transition: all 0.3s ease;
+}
+
+.slide-text:hover {
+  text-shadow: 3px 3px 12px rgba(0,0,0,0.8);
+  transform: translateX(-50%) translateY(-2px);
+}
+
+/* Footer */
 .footer {
   background-color: #f8f9fa;
   color: #fb6f92;
   text-align: center;
-  padding: 10px 0;
+  padding: 12px 0;
   font-size: 14px;
+  font-weight: bold;
+  border-top: 1px solid #ffd6e0;
+}
+
+/* Responsive for mobile */
+@media (max-width: 650px) {
+  .slide-text {
+    font-size: 20px;
+    padding: 8px 20px;
+  }
+
+  /* Smaller images */
+  .carousel-image {
+    height: 250px;
+  }
+
+  /* Smaller width */
+  .carousel {
+    max-width: 90%; /* smaller width on mobile */
+  }
+
+  .carousel-title {
+    font-size: 26px;
+    margin-bottom: 25px;
+  }
+
+  .carousel-container {
+    padding: 30px 15px 15px 15px;
+  }
+}
+
+
+/* Hearts */
+#hearts {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 15; /* Above the balloons */
+}
+
+.heart {
+  position: absolute;
+  bottom: -50px;
+  width: 30px;
+  height: 30px;
+  background: radial-gradient(circle, #ff416c, #ff4b2b);
+  clip-path: polygon(50% 0%, 100% 35%, 80% 100%, 50% 70%, 20% 100%, 0% 35%);
+  animation: riseHearts 5s linear infinite;
+  transform: rotate(45deg);
+}
+
+@keyframes riseHearts {
+  0% {
+    transform: translateY(0) rotate(45deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-120vh) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+/* Confetti */
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #ff6f91;
+  opacity: 0.8;
+  animation: dropConfetti 3s linear infinite;
+}
+
+@keyframes dropConfetti {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
 }
