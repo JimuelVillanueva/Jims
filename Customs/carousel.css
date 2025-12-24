@@ -1,4 +1,3 @@
-/* Body with animated gradient background */
 body {
   margin: 0;
   font-family: 'Arial', sans-serif;
@@ -9,10 +8,9 @@ body {
   background: linear-gradient(135deg, #f17f9cde, #f89cb4, #f594b4, #f1abbe);
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
-  perspective: 1000px; /* 3D effect */
+  perspective: 1000px; 
 }
 
-/* Floating subtle sparkles */
 body::before {
   content: '';
   position: fixed;
@@ -27,20 +25,18 @@ body::before {
   z-index: 0;
 }
 
-/* Gradient animation */
 @keyframes gradientShift {
-  0% {background-position: 0% 50%;}
-  50% {background-position: 100% 50%;}
-  100% {background-position: 0% 50%;}
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 @keyframes floatCircles {
-  0% {transform: translateY(0);}
-  50% {transform: translateY(-50px);}
-  100% {transform: translateY(0);}
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-50px); }
+  100% { transform: translateY(0); }
 }
 
-/* Balloons Layer */
 #balloons {
   position: fixed;
   top: 0;
@@ -52,7 +48,6 @@ body::before {
   z-index: 10;
 }
 
-/* Individual balloons */
 .balloon {
   position: absolute;
   bottom: -100px;
@@ -60,13 +55,12 @@ body::before {
   height: 60px;
   border-radius: 50%;
   background: linear-gradient(145deg, #ff4d6d, #ff7aa0);
-  animation: rise 6s linear infinite; /* Faster balloon rise */
+  animation: rise 6s linear infinite;
   transform-style: preserve-3d;
   box-shadow: inset -5px -5px 10px rgba(255,255,255,0.3),
               inset 5px 5px 10px rgba(0,0,0,0.2);
 }
 
-/* Balloon string */
 .balloon::after {
   content: '';
   position: absolute;
@@ -78,7 +72,6 @@ body::before {
   transform: translateX(-50%);
 }
 
-/* Balloon rise animation with 3D rotation */
 @keyframes rise {
   0% {
     transform: translateY(0) rotateX(0deg) rotateY(0deg);
@@ -91,7 +84,6 @@ body::before {
   }
 }
 
-/* Carousel container */
 .carousel-container {
   text-align: center;
   padding: 50px 20px 20px 20px;
@@ -100,7 +92,6 @@ body::before {
   z-index: 1;
 }
 
-/* Carousel title */
 .carousel-title {
   font-size: 36px;
   color: #ff4d6d;
@@ -108,7 +99,6 @@ body::before {
   text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
 }
 
-/* Carousel box */
 .carousel {
   position: relative;
   max-width: 650px;
@@ -122,20 +112,17 @@ body::before {
   z-index: 1;
 }
 
-/* Track for sliding */
 .carousel-track {
   display: flex;
   transition: transform 0.4s ease-in-out;
   cursor: grab;
 }
 
-/* Each slide */
 .slide {
   position: relative;
   min-width: 100%;
 }
 
-/* Carousel images */
 .carousel-image {
   width: 100%;
   height: 420px;
@@ -149,7 +136,6 @@ body::before {
   transform: scale(1.05);
 }
 
-/* Text overlay directly on image */
 .slide-text {
   position: absolute;
   bottom: 30px;
@@ -161,6 +147,7 @@ body::before {
   letter-spacing: 1px;
   text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
   transition: all 0.3s ease;
+  z-index: 6; 
 }
 
 .slide-text:hover {
@@ -168,7 +155,6 @@ body::before {
   transform: translateX(-50%) translateY(-2px);
 }
 
-/* Footer */
 .footer {
   background-color: #f8f9fa;
   color: #fb6f92;
@@ -179,24 +165,74 @@ body::before {
   border-top: 1px solid #ffd6e0;
 }
 
-/* Responsive for mobile */
 @media (max-width: 650px) {
-  .slide-text {
-    font-size: 20px;
-    padding: 8px 20px;
-  }
-  .carousel-image {
-    height: 250px;
-  }
-  .carousel {
-    max-width: 90%;
-  }
-  .carousel-title {
-    font-size: 26px;
-    margin-bottom: 25px;
-  }
-  .carousel-container {
-    padding: 30px 15px 15px 15px;
-  }
+  .slide-text { font-size: 20px; padding: 8px 20px; }
+  .carousel-image { height: 250px; }
+  .carousel { max-width: 90%; }
+  .carousel-title { font-size: 26px; margin-bottom: 25px; }
+  .carousel-container { padding: 30px 15px 15px 15px; }
 }
 
+.hearts-bar {
+  margin-top: 22px;
+  font-size: 26px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.hearts-bar span {
+  animation: heartBeat 1.8s infinite;
+}
+
+.hearts-bar span:nth-child(2) { animation-delay: .2s; }
+.hearts-bar span:nth-child(3) { animation-delay: .4s; }
+.hearts-bar span:nth-child(4) { animation-delay: .6s; }
+.hearts-bar span:nth-child(5) { animation-delay: .8s; }
+
+@keyframes heartBeat {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.25); }
+}
+
+.pulse-glow {
+  margin: 20px auto 0;
+  width: 160px;
+  height: 6px;
+  border-radius: 10px;
+  background: #ff4d6d;
+  opacity: 0.6;
+  animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+  0% { transform: scaleX(0.8); opacity: 0.4; }
+  50% { transform: scaleX(1); opacity: 0.8; }
+  100% { transform: scaleX(0.8); opacity: 0.4; }
+}
+
+.sparkles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 5; 
+}
+
+.sparkles span {
+  position: absolute;
+  bottom: 0;
+  font-size: 12px;
+  color: #ffd6e0;
+  animation: sparkleFloat 4s linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes sparkleFloat {
+  0% { transform: translateY(0) scale(0.8); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateY(-120px) scale(1.2); opacity: 0; }
+}

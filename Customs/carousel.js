@@ -1,17 +1,15 @@
-// Balloons generator (overlapping carousel)
 const balloonContainer = document.getElementById('balloons');
-for (let i = 0; i < 50; i++) {  // Increased number of balloons
+for (let i = 0; i < 50; i++) {  
   const balloon = document.createElement('div');
   balloon.classList.add('balloon');
   balloon.style.left = Math.random() * 100 + '%';
-  balloon.style.animationDuration = 4 + Math.random() * 2 + 's';  // Faster balloon rise
+  balloon.style.animationDuration = 4 + Math.random() * 2 + 's';  
   balloon.style.width = 30 + Math.random() * 20 + 'px';
   balloon.style.height = 50 + Math.random() * 20 + 'px';
   balloonContainer.appendChild(balloon);
 }
 
 
-// Carousel swipe functionality
 const track = document.querySelector('.carousel-track');
 const slides = Array.from(track.children);
 let currentIndex = 0, startX = 0, currentTranslate = 0, prevTranslate = 0, isDragging = false;
@@ -61,3 +59,12 @@ function setPositionByIndex() {
 
 window.addEventListener('resize', setPositionByIndex);
 
+const sparkleBox = document.querySelector('.sparkles');
+
+setInterval(() => {
+  const s = document.createElement('span');
+  s.textContent = '✨';
+  s.style.left = Math.random() * 100 + '%';
+  sparkleBox.appendChild(s);
+  setTimeout(() => s.remove(), 4000);
+}, 600);
