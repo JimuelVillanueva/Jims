@@ -69,11 +69,3 @@ setInterval(() => {
   setTimeout(() => s.remove(), 4000);
 }, 600);
 
-const music = document.getElementById("birthday-song");
-
-document.addEventListener("click", () => {
-  if (music.paused) {
-    music.play();
-  }
-}, { once: true });
-  
