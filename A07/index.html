@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="../img/Xros.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Digimon Xros Heart</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+  <style>
+    body {
+      background-color: #1e1e1e;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      transition: background-color 0.3s ease;
+    }
+
+    .container {
+      padding-top: 50px;
+      padding-bottom: 50px;
+    }
+
+    .card-deck {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .card {
+      width: 18rem;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      background-color: #333;
+      border: 1px solid #444;
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+    }
+
+    .card-body {
+      text-align: center;
+      background-color: #444;
+      padding: 1rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #ffcc00;
+      cursor: pointer;
+    }
+
+    .card-text {
+      color: #ccc;
+    }
+
+    #floatingImageModal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      background-color: rgba(0, 0, 0, 0.8);
+      border-radius: 0.5rem;
+      padding: 20px;
+      z-index: 9999;
+      max-width: 90%;
+      max-height: 80vh;
+      overflow: hidden;
+    }
+
+    #floatingImageModal img {
+      width: 100%;
+      height: auto;
+      max-height: 80vh;
+      border-radius: 0.5rem;
+    }
+
+    #floatingImageModal .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 2.5rem;
+      color: red;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      z-index: 1000;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    #floatingImageModal .close-btn:hover {
+      color: #ffcc00;
+      transform: scale(1.1);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      z-index: 9998;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container py-5">
+    <h1 class="text-center mb-4" style="color: red; font-weight: 900;">Digimon Xros Heart</h1>
+
+    <div class="text-center mb-4">
+      <input type="text" id="searchBar" class="form-control w-50 mx-auto" placeholder="Search for Digimon">
+      <button class="btn btn-warning mt-3" id="showXrosHeartBtn">Show Xros Heart</button>
+      <button class="btn btn-success mt-3" id="showAllDigimonsBtn" style="display: none;">Show All Digimons</button>
+    </div>
+
+    <div class="container text-center my-4">
+      <a href="../activities.html" class="btn btn-secondary">Back to Activities</a>
+      <a href="https://digi-api.com/" class="btn btn-primary">View Digimon API</a>
+    </div>
+
+    <div id="digimonCards" class="card-deck"></div>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay"></div>
+
+  <div id="floatingImageModal">
+    <button class="close-btn" onclick="closeImageModal()">X</button>
+    <img id="floatingImage" src="" alt="Digimon Image">
+  </div>
+
+  <script>
+    const digimonCardsContainer = document.getElementById('digimonCards');
+    const floatingImageModal = document.getElementById('floatingImageModal');
+    const floatingImage = document.getElementById('floatingImage');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const searchBar = document.getElementById('searchBar');
+    const showXrosHeartBtn = document.getElementById('showXrosHeartBtn');
+    const showAllDigimonsBtn = document.getElementById('showAllDigimonsBtn');
+
+    const xrosHeartDigimons = [
+      { name: "Shoutmon", img: "https://digi-api.com/images/digimon/w/Shoutmon.png", level: "Champion" },
+      { name: "Dorulumon", img: "https://digi-api.com/images/digimon/w/Dorulumon.png", level: "Champion" },
+      { name: "Ballistamon", img: "https://digi-api.com/images/digimon/w/Ballistamon.png", level: "Champion" },
+      { name: "Beelzebumon", img: "https://digi-api.com/images/digimon/w/Beelzebumon.png", level: "Ultimate" },
+      { name: "Knightmon", img: "https://digi-api.com/images/digimon/w/Knightmon.png", level: "Champion" },
+      { name: "Sparrowmon", img: "https://digi-api.com/images/digimon/w/Sparrowmon.png", level: "Champion" }
+    ];
+
+    function createCard(digimon) {
+      const card = document.createElement('div');
+      card.classList.add('card');
+      card.innerHTML = `
+        <img src="${digimon.img}" class="card-img-top" alt="Image of ${digimon.name}">
+        <div class="card-body">
+          <span class="card-title" onclick="showImageModal('${digimon.img}')">${digimon.name}</span>
+          <p class="card-text">Level: ${digimon.level}</p>
+          <button class="btn btn-info mt-2" onclick="window.location.href='view.html?name=${encodeURIComponent(digimon.name)}'">View</button>
+    </div>
+  `
+      digimonCardsContainer.appendChild(card);
+    }
+
+    function showImageModal(imageUrl) {
+      floatingImage.src = imageUrl;
+      floatingImageModal.style.display = 'block';
+      modalOverlay.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeImageModal() {
+      floatingImageModal.style.display = 'none';
+      modalOverlay.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    function filterDigimons(digimons) {
+      const query = searchBar.value.toLowerCase();
+      const filteredDigimons = digimons.filter(digimon => digimon.name.toLowerCase().includes(query));
+      digimonCardsContainer.innerHTML = '';
+      filteredDigimons.forEach(digimon => createCard(digimon));
+    }
+
+    function fetchDigimons() {
+      fetch('https://digimon-api.vercel.app/api/digimon')
+        .then(response => response.json())
+        .then(data => {
+          searchBar.addEventListener('input', () => filterDigimons(data));
+
+          data.forEach(digimon => createCard(digimon));
+        })
+        .catch(error => console.error('Error fetching Digimon data:', error));
+    }
+
+    function renderXrosHeart() {
+      digimonCardsContainer.innerHTML = '';
+      xrosHeartDigimons.forEach(digimon => createCard(digimon));
+
+      showAllDigimonsBtn.style.display = 'inline-block';
+    }
+
+    function renderAllDigimons() {
+      digimonCardsContainer.innerHTML = '';
+      fetchDigimons();
+
+      showAllDigimonsBtn.style.display = 'none';
+    }
+
+    showXrosHeartBtn.addEventListener('click', () => {
+      renderXrosHeart();
+      showXrosHeartBtn.style.display = 'none';
+    });
+
+
+    showAllDigimonsBtn.addEventListener('click', () => {
+      renderAllDigimons();
+      showXrosHeartBtn.style.display = 'inline-block';
+    });
+
+
+    fetchDigimons();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-bf4e3b7bfbff75f0c9c826b8b3e92e6b147de4cc62d0f42adf510227b0c028d9"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

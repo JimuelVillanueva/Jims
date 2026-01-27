@@ -68,4 +68,3 @@ setInterval(() => {
   sparkleBox.appendChild(s);
   setTimeout(() => s.remove(), 4000);
 }, 600);
-
